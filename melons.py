@@ -21,10 +21,30 @@ class AbstractMelonOrder:
         base_price = 5
         total = (1 + self.tax) * self.qty * base_price
 
+        # If melon species is christmas melon base price increase 1.5 times higher
+        if self.species == "Christmas melon":
+            base_price = base_price * 1.5
+
+        # If the order type is international and qty is less than 10, total price plus 3
+        if self.order_type == "international" and self.qty < 10:
+            total += 3
+
         return total
 
     def mark_shipped(self):
         """Record the fact than an order has been shipped."""
+
+class GovernmentMelonOrder(AbstractMelonOrder):
+    """Melon order purchased by US gov"""
+
+    order_type = "government"
+    tax = 0
+    
+    passed_inspection = False
+
+    def mark_inspection(self, passed):
+        self.passed_inspection = passed
+        print("The inspection passed")
 
 
 class DomesticMelonOrder(AbstractMelonOrder):
